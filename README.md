@@ -126,8 +126,10 @@ flutter run -d android
 
 #### Web
 ```bash
-flutter run -d chrome --web-renderer html
+flutter run -d chrome --web-renderer canvaskit
 ```
+
+**Live Demo**: [https://piotrstyla.github.io/Private-Proofs-of-Image-Manipulation-using-Folding-based-zkSNARKs/](https://piotrstyla.github.io/Private-Proofs-of-Image-Manipulation-using-Folding-based-zkSNARKs/)
 
 ## 📖 Usage
 
