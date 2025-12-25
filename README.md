@@ -306,9 +306,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Project Lead**: Piotr "hipcio" Styła
 - **Email**: p.styla@gmail.com
-- **GitHub**: [@PiotrSty](https://github.com/PiotrSty)
-- **Twitter**: [@vimzproofs](https://twitter.com/vimzproofs)
-- **Discord**: [Join our community](https://discord.gg/vimz)
+- **X (Twitter)**: [@PiotrSty](https://x.com/PiotrSty)
 
 ## ⭐ Show Your Support
 
