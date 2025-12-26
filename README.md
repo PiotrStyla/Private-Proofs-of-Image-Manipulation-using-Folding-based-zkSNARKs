@@ -405,6 +405,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you find this project useful, please consider giving it a star on GitHub!
 
+### 💝 Support a Good Cause
+
+If you like or use this app, please consider supporting the **Hospice Foundation in Cracow, Poland**. They provide compassionate end-of-life care and support for patients and their families.
+
+**Donate here**: [https://fundacja-hospicjum.org/](https://fundacja-hospicjum.org/)
+
+Your contribution makes a real difference in people's lives. Thank you for your generosity! 🙏
+
 ---
 
 **Built with ❤️ using Flutter** | **Powered by Zero-Knowledge Cryptography** | **Making the Internet More Trustworthy**
