@@ -131,11 +131,100 @@ flutter run -d chrome --web-renderer canvaskit
 
 **Live Demo**: [https://piotrstyla.github.io/Private-Proofs-of-Image-Manipulation-using-Folding-based-zkSNARKs/](https://piotrstyla.github.io/Private-Proofs-of-Image-Manipulation-using-Folding-based-zkSNARKs/)
 
-⚠️ **Note**: First deployment in progress. Site will be live in 2-3 minutes after enabling GitHub Pages.
+## 🎯 Why Use VIMz Private Proofs?
 
-## 📖 Usage
+### **For Content Creators & Journalists**
+- **Prove Authenticity**: Demonstrate your images haven't been maliciously altered
+- **Maintain Privacy**: Zero-knowledge proofs reveal nothing about original content
+- **Combat Deepfakes**: Cryptographic proof of legitimate editing vs manipulation
+- **Build Trust**: Verifiable transparency without exposing raw files
 
-### 1. Generate a Proof
+### **For Media Organizations**
+- **Editorial Integrity**: Prove images meet ethical editing standards
+- **Source Protection**: Verify authenticity without revealing sensitive originals
+- **Automated Verification**: <1s verification time for real-time workflows
+- **Audit Trail**: Complete transformation history with cryptographic guarantees
+
+### **For Researchers & Forensics**
+- **Scientific Proof**: Mathematically guaranteed authenticity verification
+- **Compact Evidence**: 11KB proofs vs traditional 120KB+ signatures
+- **Offline Verification**: No trusted third parties or internet required
+- **Cross-Platform**: Works on web, desktop, and mobile devices
+
+### **Key Advantages**
+- ✅ **Privacy-Preserving**: Original image never needs to be shared
+- ✅ **Efficient**: 25% faster than competing solutions
+- ✅ **Small Proofs**: 90% smaller files for easy distribution
+- ✅ **Standards-Based**: Uses industry-standard BN254 elliptic curves
+- ✅ **Open Source**: Fully auditable cryptographic implementation
+
+## 📖 How to Use the Web App
+
+### **Generate a Proof (Prove Your Image is Authentic)**
+
+1. **Visit the Live Demo** *(link above)*
+
+2. **Click "Generate Proof"** from the home screen
+
+3. **Upload Your Images**:
+   - **Left Panel**: Upload your **original, unedited image**
+   - **Right Panel**: Upload your **edited version**
+   - Supports JPG, PNG up to 8K resolution (33MP)
+
+4. **Select Transformations**:
+   - Check which edits you applied (crop, resize, rotate, filters, etc.)
+   - The app will verify these specific transformations
+
+5. **Click "Generate Zero-Knowledge Proof"**:
+   - Processing takes ~25 seconds for 8K images
+   - Generates cryptographic proof of authenticity
+   - Downloads a small proof file (typically <11KB)
+
+6. **Share Your Proof**:
+   - Distribute the proof file alongside your edited image
+   - Others can verify authenticity without seeing your original
+
+### **Verify a Proof (Check Image Authenticity)**
+
+1. **Click "Verify Proof"** from the home screen
+
+2. **Upload the Proof File**:
+   - Drag and drop the `.json` proof file
+   - Or select from recent proofs in your browser
+
+3. **View Results**:
+   - ✅ **Green Check**: Image is authentic, transformations verified
+   - ❌ **Red X**: Image has been tampered with or proof is invalid
+   - See detailed transformation history and metadata
+
+4. **Export or Share**:
+   - Download verification report
+   - View proof statistics and algorithm details
+
+### **Performance Dashboard**
+
+- Monitor real-time proof generation performance
+- Compare VIMz against competitors
+- View optimization tips and system recommendations
+- Track memory usage and processing times
+
+## 💡 Use Cases
+
+### **Photojournalism**
+A journalist can prove their news photo was only color-corrected and cropped, not manipulated, without revealing the original RAW file that might contain metadata identifying sources.
+
+### **Scientific Publishing**
+Researchers can demonstrate microscopy images were only brightness-adjusted and annotated, maintaining data integrity while protecting unpublished findings.
+
+### **Social Media Verification**
+Content creators can prove viral images are authentic, combating misinformation while maintaining creative control over their originals.
+
+### **Legal Evidence**
+Digital forensics teams can verify evidence images were properly handled through the chain of custody without compromising sensitive case details
+
+## 📖 Developer Usage
+
+### 1. Programmatic Proof Generation
 
 ```dart
 // Upload original and edited images
@@ -161,7 +250,7 @@ final proof = await viewModel.generateProof(
 );
 ```
 
-### 2. Verify a Proof
+### 2. Programmatic Verification
 
 ```dart
 // Load proof from file or network
