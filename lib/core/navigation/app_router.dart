@@ -7,6 +7,9 @@ import '../../views/home_view.dart';
 import '../../views/generate_proof_view.dart';
 import '../../views/verify_proof_view.dart';
 import '../../views/performance_dashboard_view.dart';
+import '../../views/privacy_policy_view.dart';
+import '../../views/cookie_policy_view.dart';
+import '../../views/terms_of_service_view.dart';
 
 /// Application router with declarative navigation
 class AppRouter {
@@ -47,6 +50,21 @@ class AppRouter {
             create: (_) => getIt<ImageProofViewModel>(),
             child: const PerformanceDashboardView(),
           ),
+        ),
+        GoRoute(
+          path: '/privacy',
+          name: 'privacy',
+          builder: (context, state) => const PrivacyPolicyView(),
+        ),
+        GoRoute(
+          path: '/cookies',
+          name: 'cookies',
+          builder: (context, state) => const CookiePolicyView(),
+        ),
+        GoRoute(
+          path: '/terms',
+          name: 'terms',
+          builder: (context, state) => const TermsOfServiceView(),
         ),
       ],
       errorBuilder: (context, state) => Scaffold(

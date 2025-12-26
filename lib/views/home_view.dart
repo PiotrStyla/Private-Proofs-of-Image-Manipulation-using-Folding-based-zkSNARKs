@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../core/viewmodels/image_proof_viewmodel.dart';
+import '../widgets/charity_footer.dart';
+import '../widgets/cookie_consent_banner.dart';
 
 /// Modern home view with glassmorphism and real-time stats
 class HomeView extends StatelessWidget {
@@ -10,21 +12,29 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(context),
-          SliverPadding(
-            padding: const EdgeInsets.all(24),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildStatsCards(context),
-                const SizedBox(height: 32),
-                _buildQuickActions(context),
-                const SizedBox(height: 32),
-                _buildRecentProofs(context),
-              ]),
-            ),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              _buildAppBar(context),
+              SliverPadding(
+                padding: const EdgeInsets.all(24),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    _buildStatsCards(context),
+                    const SizedBox(height: 32),
+                    _buildQuickActions(context),
+                    const SizedBox(height: 32),
+                    _buildRecentProofs(context),
+                    const SizedBox(height: 32),
+                    const CharityFooter(),
+                    const SizedBox(height: 24),
+                  ]),
+                ),
+              ),
+            ],
           ),
+          const CookieConsentBanner(),
         ],
       ),
     );
