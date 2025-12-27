@@ -1,8 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../core/viewmodels/image_proof_viewmodel.dart';
 import '../core/models/image_proof.dart';
+import '../core/crypto/crypto_service.dart';
+import '../core/services/service_initializer.dart';
 import 'dart:convert';
 
 /// Proof verification view with visual feedback and QR code support
@@ -16,6 +19,9 @@ class VerifyProofView extends StatefulWidget {
 class _VerifyProofViewState extends State<VerifyProofView> with SingleTickerProviderStateMixin {
   ImageProof? _proofToVerify;
   bool? _verificationResult;
+  Uint8List? _uploadedImage;
+  bool? _imageMatchResult;
+  bool _isCheckingImageMatch = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
@@ -333,21 +339,26 @@ class _VerifyProofViewState extends State<VerifyProofView> with SingleTickerProv
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            _buildImageVerificationSection(proof),
             const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
               children: [
                 ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
                       _proofToVerify = null;
                       _verificationResult = null;
+                      _uploadedImage = null;
+                      _imageMatchResult = null;
                     });
                   },
                   icon: const Icon(Icons.refresh),
                   label: const Text('Verify Another'),
                 ),
-                const SizedBox(width: 16),
                 OutlinedButton.icon(
                   onPressed: () {
                     _showTransformationDetails(context, proof);
