@@ -65,38 +65,218 @@ class _GenerateProofViewState extends State<GenerateProofView> {
   }
 
   Widget _buildGeneratingView(ImageProofViewModel viewModel) {
+    final progress = viewModel.generationProgress;
+    final progressPercent = (progress * 100).toInt();
+    final estimatedTimeRemaining = ((1 - progress) * 180).toInt(); // ~3 min total
+    
+    String currentPhase;
+    if (progress < 0.2) {
+      currentPhase = '📸 Analyzing images...';
+    } else if (progress < 0.5) {
+      currentPhase = '🔐 Applying Nova folding zkSNARK...';
+    } else if (progress < 0.8) {
+      currentPhase = '🔗 Building cryptographic Merkle trees...';
+    } else {
+      currentPhase = '✅ Finalizing proof and compressing...';
+    }
+
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 24),
-          Text(
-            'Generating Zero-Knowledge Proof...',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48),
-            child: LinearProgressIndicator(
-              value: viewModel.generationProgress,
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(4),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Main progress indicator
+            const SizedBox(
+              width: 80,
+              height: 80,
+              child: CircularProgressIndicator(
+                strokeWidth: 6,
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Title and time estimate
+            Text(
+              'Generating Zero-Knowledge Proof',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.blue.withOpacity(0.3)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.schedule, size: 16, color: Colors.blue),
+                  const SizedBox(width: 6),
+                  Text(
+                    estimatedTimeRemaining > 0
+                        ? 'Est. ${estimatedTimeRemaining}s remaining'
+                        : 'Almost done...',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Progress bar
+            Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 12,
+                      borderRadius: BorderRadius.circular(6),
+                      backgroundColor: Colors.grey.shade200,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        currentPhase,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        '$progressPercent%',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            
+            // Technical details card
+            Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.blue.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        'What\'s Happening?',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTechDetailRow(Icons.shield, '⚡ GPU-accelerated cryptography'),
+                  const SizedBox(height: 8),
+                  _buildTechDetailRow(Icons.account_tree, '🔗 Building Merkle tree chains'),
+                  const SizedBox(height: 8),
+                  _buildTechDetailRow(Icons.compress, '📦 Compressing to <11KB'),
+                  const SizedBox(height: 8),
+                  _buildTechDetailRow(Icons.security, '🔐 Zero-knowledge proof generation'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Tips card
+            Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.green.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.lightbulb_outline, color: Colors.green.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Did You Know?',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '• Your proof will be ~11KB (90% smaller than alternatives)\n'
+                    '• Verification takes less than 1 second\n'
+                    '• All processing happens in YOUR browser (privacy first!)\n'
+                    '• Download the .json proof file when ready',
+                    style: TextStyle(
+                      color: Colors.green.shade900,
+                      fontSize: 14,
+                      height: 1.6,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '☕ Perfect time for a coffee break!',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTechDetailRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey.shade600),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${(viewModel.generationProgress * 100).toInt()}%',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            '🔐 Applying Nova folding\n🔗 Building Merkle trees\n⚡ GPU acceleration active',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

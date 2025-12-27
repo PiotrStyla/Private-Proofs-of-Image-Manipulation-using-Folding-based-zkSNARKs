@@ -69,7 +69,7 @@ class HomeView extends StatelessWidget {
               context,
               '1',
               'Generate Proof',
-              'Upload original + edited images → Get cryptographic proof file (.json)',
+              'Upload original + edited images → Wait ~3 minutes → Get proof file (.json)',
               Icons.add_photo_alternate,
             ),
             const SizedBox(height: 12),
