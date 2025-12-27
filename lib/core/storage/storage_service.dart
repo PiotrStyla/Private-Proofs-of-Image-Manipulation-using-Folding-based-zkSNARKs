@@ -79,6 +79,7 @@ class StorageService {
   /// Save proof to both SQLite and Hive
   Future<void> saveProof(ImageProof proof) async {
     _ensureInitialized();
+    await _ensureBoxesOpen();
 
     final json = proof.toJson();
     final jsonString = jsonEncode(json);
@@ -111,7 +112,7 @@ class StorageService {
     }
 
     // Cache in Hive for fast access (works on all platforms)
-    await _proofCache!.put(proof.id, jsonString);
+    await _saveToHiveWithRetry(proof.id, jsonString);
     
     // Update metadata cache for quick stats
     await _updateMetadataCache(proof);
@@ -373,6 +374,35 @@ class StorageService {
   void _ensureInitialized() {
     if (!_initialized) {
       throw StateError('StorageService not initialized. Call initialize() first.');
+    }
+  }
+
+  /// Ensure Hive boxes are open (reopen if closed)
+  Future<void> _ensureBoxesOpen() async {
+    // Check if boxes are open, reopen if needed
+    if (_proofCache == null || !_proofCache!.isOpen) {
+      _proofCache = await Hive.openBox<String>('proof_cache');
+    }
+    if (_metadataCache == null || !_metadataCache!.isOpen) {
+      _metadataCache = await Hive.openBox<String>('metadata_cache');
+    }
+  }
+
+  /// Save to Hive with retry logic for transient failures
+  Future<void> _saveToHiveWithRetry(String key, String value, {int maxRetries = 3}) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        await _ensureBoxesOpen();
+        await _proofCache!.put(key, value);
+        return; // Success
+      } catch (e) {
+        if (attempt == maxRetries - 1) {
+          // Last attempt failed, rethrow
+          throw Exception('Failed to save to Hive after $maxRetries attempts: $e');
+        }
+        // Wait before retry (exponential backoff)
+        await Future.delayed(Duration(milliseconds: 100 * (attempt + 1)));
+      }
     }
   }
 
