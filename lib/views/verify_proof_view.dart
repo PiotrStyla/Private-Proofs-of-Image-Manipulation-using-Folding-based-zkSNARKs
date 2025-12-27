@@ -711,7 +711,7 @@ class _VerifyProofViewState extends State<VerifyProofView> with SingleTickerProv
   }
 
   Widget _buildImageMatchResult() {
-        final isMatch = _imageMatchResult ?? false;
+    final isMatch = _imageMatchResult ?? false;
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -761,44 +761,44 @@ class _VerifyProofViewState extends State<VerifyProofView> with SingleTickerProv
   }
 
   Future<void> _pickImageToVerify(ImageProof proof) async {
-        try {
-          final result = await FilePicker.platform.pickFiles(
-            type: FileType.image,
-            withData: true,
-          );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        withData: true,
+      );
 
-          if (result != null && result.files.single.bytes != null) {
-            setState(() {
-              _isCheckingImageMatch = true;
-              _uploadedImage = result.files.single.bytes;
-            });
+      if (result != null && result.files.single.bytes != null) {
+        setState(() {
+          _isCheckingImageMatch = true;
+          _uploadedImage = result.files.single.bytes;
+        });
 
-            // Calculate hash of uploaded image
-            final cryptoService = getIt<CryptoService>();
-            final imageHash = await cryptoService.hashImage(_uploadedImage!);
+        // Calculate hash of uploaded image
+        final cryptoService = getIt<CryptoService>();
+        final imageHash = await cryptoService.hashImage(_uploadedImage!);
 
-            // Compare with proof's edited image hash
-            final matches = imageHash == proof.editedImageHash;
+        // Compare with proof's edited image hash
+        final matches = imageHash == proof.editedImageHash;
 
-            setState(() {
-              _imageMatchResult = matches;
-              _isCheckingImageMatch = false;
-            });
-          }
-        } catch (e) {
-          setState(() {
-            _isCheckingImageMatch = false;
-          });
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error verifying image: $e'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }
+        setState(() {
+          _imageMatchResult = matches;
+          _isCheckingImageMatch = false;
+        });
       }
+    } catch (e) {
+      setState(() {
+        _isCheckingImageMatch = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error verifying image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
   }
 
   String _formatDate(DateTime date) {
