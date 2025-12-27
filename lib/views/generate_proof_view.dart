@@ -927,15 +927,19 @@ class _GenerateProofViewState extends State<GenerateProofView> {
   void _downloadOptimizedEditedImage(ImageProof proof) {
     try {
       final viewModel = Provider.of<ImageProofViewModel>(context, listen: false);
-      if (viewModel.lastOptimizedEditedImage != null) {
+      final editedImage = viewModel.lastOptimizedEditedImage;
+      
+      if (editedImage != null && editedImage.isNotEmpty) {
         // Download the optimized edited image
-        final blob = html.Blob([viewModel.lastOptimizedEditedImage!], 'image/png');
+        final blob = html.Blob([editedImage], 'image/png');
         final url = html.Url.createObjectUrlFromBlob(blob);
         html.AnchorElement(href: url)
           ..setAttribute('download', 'edited_image_${proof.id.substring(0, 8)}.png')
           ..click();
         
         html.Url.revokeObjectUrl(url);
+      } else {
+        debugPrint('No edited image available for download');
       }
     } catch (e) {
       // Log error but don't fail the proof download
