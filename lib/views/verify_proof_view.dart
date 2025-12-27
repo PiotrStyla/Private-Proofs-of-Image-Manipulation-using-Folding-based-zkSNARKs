@@ -646,8 +646,159 @@ class _VerifyProofViewState extends State<VerifyProofView> with SingleTickerProv
             ),
           ],
         );
-      },
-    );
+
+      Widget _buildImageVerificationSection(ImageProof proof) {
+        return Card(
+          elevation: 4,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.image_search, color: Colors.blue.shade700),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Verify Image Matches This Proof',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Optional: Upload the edited image to verify it matches this proof',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                ),
+                const SizedBox(height: 20),
+                if (_uploadedImage != null && _imageMatchResult != null)
+                  _buildImageMatchResult()
+                else if (_isCheckingImageMatch)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 12),
+                          Text('Calculating image hash...'),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _pickImageToVerify(proof),
+                      icon: const Icon(Icons.upload_file),
+                      label: const Text('Upload Edited Image'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+  }
+
+  Widget _buildImageMatchResult() {
+        final isMatch = _imageMatchResult ?? false;
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: isMatch ? Colors.green.shade50 : Colors.red.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isMatch ? Colors.green.shade200 : Colors.red.shade200,
+              width: 2,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                isMatch ? Icons.check_circle : Icons.cancel,
+                color: isMatch ? Colors.green.shade700 : Colors.red.shade700,
+                size: 40,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isMatch ? 'Image Match Verified!' : 'Image Does NOT Match',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isMatch ? Colors.green.shade900 : Colors.red.shade900,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isMatch
+                          ? 'The uploaded image cryptographically matches this proof'
+                          : 'This image does not match the proof. It may be a different edited version or tampered with.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isMatch ? Colors.green.shade700 : Colors.red.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+  }
+
+  Future<void> _pickImageToVerify(ImageProof proof) async {
+        try {
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.image,
+            withData: true,
+          );
+
+          if (result != null && result.files.single.bytes != null) {
+            setState(() {
+              _isCheckingImageMatch = true;
+              _uploadedImage = result.files.single.bytes;
+            });
+
+            // Calculate hash of uploaded image
+            final cryptoService = getIt<CryptoService>();
+            final imageHash = await cryptoService.hashImage(_uploadedImage!);
+
+            // Compare with proof's edited image hash
+            final matches = imageHash == proof.editedImageHash;
+
+            setState(() {
+              _imageMatchResult = matches;
+              _isCheckingImageMatch = false;
+            });
+          }
+        } catch (e) {
+          setState(() {
+            _isCheckingImageMatch = false;
+          });
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error verifying image: $e'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      }
   }
 
   String _formatDate(DateTime date) {
