@@ -76,34 +76,48 @@ class _CookieConsentBannerState extends State<CookieConsentBanner> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'We use essential browser storage',
+                        'Privacy & Local Storage Notice',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'This app stores proofs locally in your browser. No tracking or analytics. See our Cookie Policy for details.',
+                        'This app stores generated proofs locally in your browser (IndexedDB). All image processing is client-side. No data sent to servers. No tracking. By continuing, you consent to local storage. See Privacy Policy for GDPR rights.',
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 16),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/cookies'),
-                      child: const Text('Learn More'),
+                      onPressed: () => Navigator.pushNamed(context, '/privacy'),
+                      child: const Text('Privacy Policy'),
                     ),
-                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: () {
+                        setState(() => _showBanner = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Essential storage is required for basic functionality. Some features may not work.'),
+                            duration: Duration(seconds: 4),
+                          ),
+                        );
+                      },
+                      child: const Text('Reject (Limited Functionality)'),
+                    ),
                     ElevatedButton(
                       onPressed: _acceptConsent,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6366F1),
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Accept'),
+                      child: const Text('Accept & Continue'),
                     ),
                   ],
                 ),

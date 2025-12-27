@@ -24,7 +24,7 @@ class TermsOfServiceView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Last Updated: December 26, 2025',
+                'Last Updated: December 27, 2025',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey,
                     ),
@@ -129,8 +129,14 @@ class TermsOfServiceView extends StatelessWidget {
               ),
               _buildSection(
                 context,
-                'Privacy',
-                'Your use of the Service is also governed by our Privacy Policy. The Service processes all data locally in your browser and does not transmit personal information to our servers.',
+                'Privacy & GDPR Compliance',
+                'Your use of the Service is also governed by our Privacy Policy. The Service processes all data locally in your browser and does not transmit personal information to our servers.\n\n'
+                    'For EU Residents:\n'
+                    '• We comply with GDPR (General Data Protection Regulation)\n'
+                    '• All image processing is client-side (you are the data controller)\n'
+                    '• No server-side storage of personal data\n'
+                    '• Full details in our Privacy Policy\n\n'
+                    'By using this Service, you acknowledge understanding that YOU are responsible for ensuring compliance with applicable data protection laws for any personal/sensitive data you process.',
               ),
               _buildSection(
                 context,

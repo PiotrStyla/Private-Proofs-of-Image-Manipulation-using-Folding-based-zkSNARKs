@@ -284,28 +284,70 @@ class _GenerateProofViewState extends State<GenerateProofView> {
   }
 
   Widget _buildImageUploadSection() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildImageUploadCard(
-            title: 'Original Image',
-            subtitle: 'Upload unedited source',
-            image: _originalImage,
-            onUpload: () => _pickImage(isOriginal: true),
-            icon: Icons.photo_camera,
-            color: Colors.blue,
+        Container(
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.green.shade200),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.lock, color: Colors.green.shade700, size: 24),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Privacy First: Client-Side Processing',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade900,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Your images are processed entirely in YOUR browser. Nothing is uploaded to servers. You remain the data controller. GDPR-compliant by design.',
+                      style: TextStyle(
+                        color: Colors.green.shade800,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildImageUploadCard(
-            title: 'Edited Image',
-            subtitle: 'Upload modified version',
-            image: _editedImage,
-            onUpload: () => _pickImage(isOriginal: false),
-            icon: Icons.edit,
-            color: Colors.purple,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildImageUploadCard(
+                title: 'Original Image',
+                subtitle: 'Upload unedited source',
+                image: _originalImage,
+                onUpload: () => _pickImage(isOriginal: true),
+                icon: Icons.photo_camera,
+                color: Colors.blue,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildImageUploadCard(
+                title: 'Edited Image',
+                subtitle: 'Upload modified version',
+                image: _editedImage,
+                onUpload: () => _pickImage(isOriginal: false),
+                icon: Icons.edit,
+                color: Colors.purple,
+              ),
+            ),
+          ],
         ),
       ],
     );
