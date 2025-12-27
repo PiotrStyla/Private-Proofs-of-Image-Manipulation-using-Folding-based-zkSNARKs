@@ -177,7 +177,7 @@ class HomeView extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context) {
     return SliverAppBar.large(
-      expandedHeight: 200,
+      expandedHeight: 120,
       floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
@@ -186,20 +186,20 @@ class HomeView extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         background: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.secondary,
+                Color(0xFF4F46E5),
+                Color(0xFF7C3AED),
               ],
             ),
           ),
           child: const Center(
             child: Icon(
               Icons.security,
-              size: 64,
+              size: 48,
               color: Colors.white70,
             ),
           ),
